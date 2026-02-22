@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House Price Predictor | Sri Lanka</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="background-decor blur-large"></div>
+    <div class="background-decor blur-medium"></div>
+
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-home"></i>
+                <h1>Lanka<span>Home</span> AI</h1>
+            </div>
+            <p class="subtitle">Predict house prices across Sri Lanka with high-precision XGBoost.</p>
+        </header>
+
+        <main>
+            <form id="predictionForm" class="glass-card">
+                <div class="form-grid">
+                    <!-- Location Section -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-map-marker-alt"></i> Location</h3>
+                        <div class="input-group">
+                            <label for="district">District</label>
+                            <select id="district" name="district" required>
+                                <option value="" disabled selected>Select District</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="area">Area</label>
+                            <select id="area" name="area" required disabled>
+                                <option value="" disabled selected>Select Area</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Property Features -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-building"></i> Property Details</h3>
+                        <div class="flex-row">
+                            <div class="input-group">
+                                <label for="perch">Perch</label>
+                                <input type="number" id="perch" name="perch" step="0.1" placeholder="e.g. 10.5" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="year_built">Year Built</label>
+                                <input type="number" id="year_built" name="year_built" placeholder="e.g. 2020" required>
+                            </div>
+                        </div>
+                        <div class="flex-row">
+                            <div class="input-group">
+                                <label for="bedrooms">Bedrooms</label>
+                                <input type="number" id="bedrooms" name="bedrooms" placeholder="3" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="bathrooms">Bathrooms</label>
+                                <input type="number" id="bathrooms" name="bathrooms" placeholder="2" required>
+                            </div>
+                        </div>
+                        <div class="flex-row">
+                            <div class="input-group">
+                                <label for="floors">Floors</label>
+                                <input type="number" id="floors" name="floors" placeholder="2" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="parking_spots">Parking</label>
+                                <input type="number" id="parking_spots" name="parking_spots" placeholder="1" required>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label for="kitchen_area_sqft">Kitchen Area (sqft)</label>
+                            <input type="number" id="kitchen_area_sqft" name="kitchen_area_sqft" placeholder="e.g. 150" required>
+                        </div>
+                    </div>
+
+                    <!-- Utilities and Amenities -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-bolt"></i> Amenities & Utilities</h3>
+                        <div class="input-group">
+                            <label for="water_supply">Water Supply</label>
+                            <select id="water_supply" name="water_supply" required>
+                                <option value="" disabled selected>Select Water Supply</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="electricity">Electricity</label>
+                            <select id="electricity" name="electricity" required>
+                                <option value="" disabled selected>Select Electricity</option>
+                            </select>
+                        </div>
+                        <div class="checkbox-group">
+                            <label class="switch-container">
+                                <input type="checkbox" id="has_garden" name="has_garden">
+                                <span class="slider"></span>
+                                <span class="label-text">Has Garden</span>
+                            </label>
+                            <label class="switch-container">
+                                <input type="checkbox" id="has_ac" name="has_ac">
+                                <span class="slider"></span>
+                                <span class="label-text">Has A/C</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-section">
+                    <button type="submit" id="predictBtn">
+                        <span class="btn-text">Estimate Price</span>
+                        <div class="loader-dots" style="display: none;">
+                            <span></span><span></span><span></span>
+                        </div>
+                    </button>
+                </div>
+            </form>
+
+            <div id="resultCard" class="glass-card result-card hidden">
+                <div class="result-header">
+                    <h2>Estimated Market Value</h2>
+                    <p>Based on current area trends and property metrics.</p>
+                </div>
+                <div class="price-display">
+                    <span id="predictedPrice" class="price-value">LKR 00,000,000</span>
+                </div>
+                <button id="resetBtn" class="secondary-btn">New Prediction</button>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 LankaHome AI. Advanced Machine Learning for Sri Lankan Real Estate.</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
