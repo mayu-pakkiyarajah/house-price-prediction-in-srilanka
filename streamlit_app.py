@@ -30,6 +30,11 @@ def main():
     try:
         model, scaler, le_dict = load_model_and_prep()
         df_source = load_source_data()
+        
+        # Define the column order expected by the model
+        cols_order = ['district', 'area', 'perch', 'bedrooms', 'bathrooms', 'kitchen_area_sqft', 
+                      'parking_spots', 'has_garden', 'has_ac', 'water_supply', 'electricity', 
+                      'floors', 'year_built']
     except Exception as e:
         st.error(f"Error loading model or data: {e}")
         st.info("Make sure you have run the training notebook and have the following files: house_price_model.json, scaler.joblib, encoders.joblib, house_prices_srilanka.csv")
@@ -107,10 +112,7 @@ def main():
                         if col in input_df.columns:
                             input_df[col] = le.transform(input_df[col].astype(str))
                     
-                    # Reorder columns
-                    cols_order = ['district', 'area', 'perch', 'bedrooms', 'bathrooms', 'kitchen_area_sqft', 
-                                  'parking_spots', 'has_garden', 'has_ac', 'water_supply', 'electricity', 
-                                  'floors', 'year_built']
+                    # Reorder columns to match selection
                     input_df = input_df[cols_order]
                     
                     # Scale
