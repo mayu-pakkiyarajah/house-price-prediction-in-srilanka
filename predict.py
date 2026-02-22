@@ -5,7 +5,6 @@ import joblib
 import sys
 
 def predict_house_price():
-    # Load the model and preprocessing objects
     MODEL_PATH = 'house_price_model.json'
     SCALER_PATH = 'scaler.joblib'
     ENCODERS_PATH = 'encoders.joblib'
@@ -23,7 +22,6 @@ def predict_house_price():
     print("Please enter the following details:")
 
     try:
-        # Example hardcoded sample for quick testing
         data = {
             'district': input("District (e.g. Colombo): "),
             'area': input("Area (e.g. Borella): "),
@@ -42,21 +40,17 @@ def predict_house_price():
 
         input_df = pd.DataFrame([data])
         
-        # Preprocessing (Encoding)
         for col, le in le_dict.items():
             if col in input_df.columns:
                 input_df[col] = le.transform(input_df[col].astype(str))
-        
-        # Reorder columns to match training set
+
         cols_order = ['district', 'area', 'perch', 'bedrooms', 'bathrooms', 'kitchen_area_sqft', 
                       'parking_spots', 'has_garden', 'has_ac', 'water_supply', 'electricity', 
                       'floors', 'year_built']
         input_df = input_df[cols_order]
         
-        # Scaling
         input_scaled = scaler.transform(input_df)
-        
-        # Prediction
+
         prediction = model.predict(input_scaled)[0]
         
         print(f"\n======================================")

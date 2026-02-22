@@ -13,12 +13,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     let areasByDistrict = {};
 
-    // 1. Fetch options from backend
     try {
         const response = await fetch('/options');
         const options = await response.json();
 
-        // Populate Districts
         options.districts.forEach(d => {
             const opt = document.createElement('option');
             opt.value = d;
@@ -26,10 +24,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             districtSelect.appendChild(opt);
         });
 
-        // Store Areas for dynamic filtering
         areasByDistrict = options.areas_by_district;
-
-        // Populate Water Supply
         options.water_supply.forEach(w => {
             const opt = document.createElement('option');
             opt.value = w;
@@ -37,7 +32,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             waterSelect.appendChild(opt);
         });
 
-        // Populate Electricity
         options.electricity.forEach(e => {
             const opt = document.createElement('option');
             opt.value = e;
@@ -49,11 +43,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Error fetching options:', err);
     }
 
-    // 2. Handle District Change (Filter Areas)
     districtSelect.addEventListener('change', () => {
         const selectedDistrict = districtSelect.value;
         areaSelect.innerHTML = '<option value="" disabled selected>Select Area</option>';
-        
+
         if (selectedDistrict && areasByDistrict[selectedDistrict]) {
             areasByDistrict[selectedDistrict].forEach(a => {
                 const opt = document.createElement('option');
@@ -67,11 +60,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    // 3. Handle Form Submission
     predictionForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        // Show loading state
         btnText.style.display = 'none';
         loader.style.display = 'flex';
         predictBtn.disabled = true;
@@ -103,12 +94,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             const result = await response.json();
 
             if (result.status === 'success') {
-                // Show Result
                 predictionForm.classList.add('hidden');
                 resultCard.classList.remove('hidden');
                 predictedPriceElem.textContent = result.formatted_prediction;
-                
-                // Scroll to top
+
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
                 alert('Error: ' + result.message);
@@ -117,14 +106,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.error('Prediction error:', err);
             alert('An error occurred during prediction.');
         } finally {
-            // Restore button state
             btnText.style.display = 'block';
             loader.style.display = 'none';
             predictBtn.disabled = false;
         }
     });
 
-    // 4. Handle Reset
     resetBtn.addEventListener('click', () => {
         predictionForm.reset();
         areaSelect.disabled = true;

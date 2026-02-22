@@ -145,7 +145,8 @@ label {
     color: var(--text-dim);
 }
 
-input, select {
+input,
+select {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
@@ -156,7 +157,8 @@ input, select {
     transition: all 0.2s ease;
 }
 
-input:focus, select:focus {
+input:focus,
+select:focus {
     border-color: var(--primary-light);
     background: rgba(255, 255, 255, 0.08);
 }
@@ -207,11 +209,11 @@ input:focus, select:focus {
     transition: 0.3s;
 }
 
-input:checked + .slider {
+input:checked+.slider {
     background: var(--primary);
 }
 
-input:checked + .slider:before {
+input:checked+.slider:before {
     transform: translateX(20px);
 }
 
@@ -307,16 +309,31 @@ button:active {
     animation: bounce 0.6s infinite alternate;
 }
 
-.loader-dots span:nth-child(2) { animation-delay: 0.2s; }
-.loader-dots span:nth-child(3) { animation-delay: 0.4s; }
+.loader-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.loader-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+}
 
 @keyframes bounce {
-    to { transform: translateY(-7px); opacity: 0.3; }
+    to {
+        transform: translateY(-7px);
+        opacity: 0.3;
+    }
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 footer {

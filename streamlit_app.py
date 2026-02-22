@@ -5,14 +5,12 @@ import xgboost as xgb
 import joblib
 import os
 
-# --- PAGE CONFIGURATION ---
 st.set_page_config(
     page_title="LankaHome AI | House Price Predictor",
     page_icon="🏠",
     layout="wide"
 )
 
-# --- LOAD ASSETS ---
 @st.cache_resource
 def load_model_and_prep():
     model = xgb.XGBRegressor()
@@ -26,12 +24,10 @@ def load_source_data():
     return pd.read_csv('house_prices_srilanka.csv')
 
 def main():
-    # Load model and data
     try:
         model, scaler, le_dict = load_model_and_prep()
         df_source = load_source_data()
         
-        # Define the column order expected by the model
         cols_order = ['district', 'area', 'perch', 'bedrooms', 'bathrooms', 'kitchen_area_sqft', 
                       'parking_spots', 'has_garden', 'has_ac', 'water_supply', 'electricity', 
                       'floors', 'year_built']
@@ -40,22 +36,19 @@ def main():
         st.info("Make sure you have run the training notebook and have the following files: house_price_model.json, scaler.joblib, encoders.joblib, house_prices_srilanka.csv")
         return
 
-    # --- UI DESIGN ---
     st.title("🏠 LankaHome AI: House Price Predictor")
     st.markdown("Predict house prices across Sri Lanka with high-precision XGBoost machine learning.")
     st.divider()
 
-    # Create two columns: Input and Result
     col1, col2 = st.columns([2, 1])
 
     with col1:
         st.header("Property Features")
         
-        # Grid layout for inputs
         g1, g2 = st.columns(2)
         with g1:
             district = st.selectbox("District", sorted(df_source['district'].unique()))
-            # Filter areas based on district
+
             filtered_areas = sorted(df_source[df_source['district'] == district]['area'].unique())
             area = st.selectbox("Area", filtered_areas)
             
@@ -71,7 +64,6 @@ def main():
             parking = st.number_input("Parking Spots", min_value=0, value=1)
             year_built = st.number_input("Year Built", min_value=1900, max_value=2026, value=2020)
             
-            # Amenities
             st.write("Amenities")
             a_col1, a_col2 = st.columns(2)
             with a_col1:
@@ -79,7 +71,6 @@ def main():
             with a_col2:
                 has_ac = st.checkbox("Has A/C")
 
-    # Prepare data for prediction
     input_data = {
         'district': district,
         'area': area,
@@ -96,7 +87,6 @@ def main():
         'year_built': year_built
     }
 
-    # Prediction Logic
     with col2:
         st.header("Outcome")
         predict_btn = st.button("Estimate Market Value", type="primary", use_container_width=True)
@@ -104,33 +94,26 @@ def main():
         if predict_btn:
             with st.spinner("Calculating price..."):
                 try:
-                    # Convert to DataFrame
                     input_df = pd.DataFrame([input_data])
                     
-                    # Preprocessing
                     for col, le in le_dict.items():
                         if col in input_df.columns:
                             input_df[col] = le.transform(input_df[col].astype(str))
-                    
-                    # Reorder columns to match selection
+
                     input_df = input_df[cols_order]
-                    
-                    # Scale
+
                     input_scaled = scaler.transform(input_df)
-                    
-                    # Predict
+ 
                     prediction = model.predict(input_scaled)[0]
                     
                     st.success("Analysis Complete!")
                     st.metric("Estimated Price", f"LKR {prediction:,.2f}")
-                    
-                    # Optional: Show visual indicator
+
                     st.info("💡 Tip: Prices can vary based on the specific neighborhood and build quality.")
                     
                 except Exception as e:
                     st.error(f"Prediction error: {e}")
 
-    # --- FEATURE IMPORTANCE (Extra Value) ---
     st.divider()
     with st.expander("Show Model Insight (Feature Importance)"):
         st.write("This shows which factors are influencing the predictions the most.")
